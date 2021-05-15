@@ -56,6 +56,7 @@ const maxWorkAmount = 10;
 
 function clear() {
   processList = [];
+  waitingTime = [];
   clearInterval(intervalAddProcess);
   clearInterval(intervalProcess);
   processContainer.innerHTML = "";
