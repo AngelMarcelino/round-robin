@@ -1,8 +1,8 @@
 export enum ProcessState {
-  COMPLETED = 'completed',
-  RUNNING = 'running',
-  WAITING = 'waiting',
-  BLOCKED = 'blocked',
+  COMPLETED = "completed",
+  RUNNING = "running",
+  WAITING = "waiting",
+  BLOCKED = "blocked",
 }
 
 export interface Process {
@@ -10,4 +10,5 @@ export interface Process {
   remainingWork: number;
   processName: string;
   state: ProcessState;
+  timeElapsed: number;
 }
