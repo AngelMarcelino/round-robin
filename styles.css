@@ -1,0 +1,13 @@
+#process-container {
+    border: 1px solid #000;
+    height: 400px;
+    width: 800px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+#process-container > div {
+  margin-left: 20px;
+}
