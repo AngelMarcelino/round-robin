@@ -1,81 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=s, initial-scale=1.0">
-  <link href="styles.css" rel="stylesheet">
-  <title>Round-robin</title>
-</head>
-<body>
-  <div class="container" id="process-container">
-  </div>
-  <br>
-  <label for="quantum-value">Valor de quantum: </label>
-  <input value="3" type="text" id="quantum-value" name="quantum-value">
-  <button class="start" id="startBtnId">Iniciar</button>
-  <div class="stats" id="cpu-time">
-    <br>
-    <table>
-      <tr><th>CPU</th></tr>
-      <tr>
-        <td>Tiempo</td>
-        <td id="cpu-total">36</td>
-      </tr>
-      <tr>
-        <td>Idle</td>
-        <td id="cpu-idle">24</td>
-      </tr>
-      <tr>
-        <td>Ocupado</td>
-        <td id="cpu-busy">12</td>
-      </tr>
-    </table>
-  </div>
-  <div class="stats" id="response-time">
-    <br>
-    <table>
-      <tr><th>Tiempo de respuesta</th></tr>
-      <tr>
-        <td>Min</td>
-        <td id="res-min">0</td>
-      </tr>
-      <tr>
-        <td>Media</td>
-        <td id="res-med">0</td>
-      </tr>
-      <tr>
-        <td>Max</td>
-        <td id="res-max">0</td>
-      </tr>
-      <tr>
-        <td>Desviación Estándar</td>
-        <td id="res-sd">0</td>
-      </tr>
-    </table>
-  </div>
-  <div class="stats" id="turnaround-time">
-    <br>
-    <table>
-      <tr><th>Tiempo turnaround</th></tr>
-      <tr>
-        <td>Min</td>
-        <td id="ta-min">0</td>
-      </tr>
-      <tr>
-        <td>Media</td>
-        <td id="ta-med">0</td>
-      </tr>
-      <tr>
-        <td>Max</td>
-        <td id="ta-max">0</td>
-      </tr>
-      <tr>
-        <td>Desviación Estándar</td>
-        <td id="ta-sd">0</td>
-      </tr>
-    </table>
-  </div>
-  <script src="build/main-bundle.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=s, initial-scale=1.0" />
+    <link href="styles.css" rel="stylesheet" />
+    <title>Round-robin</title>
+  </head>
+  <body>
+    <div class="container" id="process-container"></div>
+    <br />
+    <label for="quantum-value">Valor de quantum: </label>
+    <input value="3" type="text" id="quantum-value" name="quantum-value" />
+    <button class="start" id="startBtnId">Iniciar</button>
+    <div class="stats" id="cpu-time">
+      <br />
+      <table>
+        <tr>
+          <th>Ciclos CPU</th>
+        </tr>
+        <tr>
+          <td>Tiempo</td>
+          <td id="cpu-total">0</td>
+        </tr>
+        <tr>
+          <td>Idle</td>
+          <td id="cpu-idle">0</td>
+        </tr>
+        <tr>
+          <td>Ocupado</td>
+          <td id="cpu-busy">0</td>
+        </tr>
+      </table>
+    </div>
+    <div class="stats" id="response-time">
+      <br />
+      <table>
+        <tr>
+          <th>Tiempo de respuesta en milisegundos</th>
+        </tr>
+        <tr>
+          <td>Min</td>
+          <td id="res-min">0</td>
+        </tr>
+        <tr>
+          <td>Media</td>
+          <td id="res-med">0</td>
+        </tr>
+        <tr>
+          <td>Max</td>
+          <td id="res-max">0</td>
+        </tr>
+        <tr>
+          <td>Desviación Estándar</td>
+          <td id="res-sd">0</td>
+        </tr>
+      </table>
+    </div>
+    <!-- <div class="stats" id="turnaround-time">
+      <br />
+      <table>
+        <tr>
+          <th>Tiempo turnaround</th>
+        </tr>
+        <tr>
+          <td>Min</td>
+          <td id="ta-min">0</td>
+        </tr>
+        <tr>
+          <td>Media</td>
+          <td id="ta-med">0</td>
+        </tr>
+        <tr>
+          <td>Max</td>
+          <td id="ta-max">0</td>
+        </tr>
+        <tr>
+          <td>Desviación Estándar</td>
+          <td id="ta-sd">0</td>
+        </tr>
+      </table>
+    </div> -->
+    <script src="build/main-bundle.js"></script>
+  </body>
 </html>

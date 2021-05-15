@@ -1,13 +1,15 @@
 import { Process, ProcessState } from "./models/process";
 import { renderProcess, updateProcess } from "./ui/process-renderization";
+import { average, standardDeviation } from "./utils/statistics";
 
 const startBtn = document.getElementById("startBtnId");
 const quantumTimeInput = document.getElementById("quantum-value");
 const processContainer = document.getElementById("process-container");
 
-let cpu_total = document.getElementById("cpu-busy").innerHTML;
-let cpu_idle = document.getElementById("cpu-busy").innerHTML;
-let cpu_busy = document.getElementById("cpu-busy").innerHTML;
+let resMin = document.getElementById("res-min");
+let resMed = document.getElementById("res-med");
+let resMax = document.getElementById("res-max");
+let resSd = document.getElementById("res-sd");
 
 function updateHtmlStats(cpuIdle: number, cpuBusy: number) {
   document.getElementById("cpu-total").innerHTML = (
@@ -24,11 +26,12 @@ startBtn.addEventListener("click", () => {
 
 function createNewProcess(workAmount: number, name: string): Process {
   return {
-    totalWork: workAmount,
     processName: name,
+    totalWork: workAmount,
     remainingWork: workAmount,
     state: ProcessState.WAITING,
     timeElapsed: 0,
+    timeStamp: new Date().getTime(),
   };
 }
 interface ProcessQueueElement {
@@ -43,6 +46,7 @@ function calculateNextElement(currentElement: number, processListSize: number) {
 }
 
 let processList: ProcessQueueElement[] = [];
+let waitingTime: number[] = [];
 let intervalAddProcess: any;
 let intervalProcess: any;
 const processLimit = 6;
@@ -55,6 +59,10 @@ function clear() {
   clearInterval(intervalAddProcess);
   clearInterval(intervalProcess);
   processContainer.innerHTML = "";
+}
+
+function isFirstTimeSeen(process: Process) {
+  return process.totalWork == process.remainingWork;
 }
 
 function start(quantumTime: number) {
@@ -86,6 +94,7 @@ function start(quantumTime: number) {
 
   intervalProcess = setInterval(() => {
     let current = processList[currentProcess];
+    updateStatistics();
     if (current.process.state == ProcessState.COMPLETED) {
       cpuIdle++;
       updateHtmlStats(cpuIdle, cpuBusy);
@@ -95,6 +104,9 @@ function start(quantumTime: number) {
       cpuBusy++;
       updateHtmlStats(cpuIdle, cpuBusy);
       current.process.state = ProcessState.RUNNING;
+    }
+    if (isFirstTimeSeen(current.process)) {
+      waitingTime.push(new Date().getTime() - current.process.timeStamp);
     }
     current.process.remainingWork--;
     currentDedicatingTime++;
@@ -114,4 +126,11 @@ function start(quantumTime: number) {
     updateProcess(current.process, current.processDom);
     console.log([...processList]);
   }, 500);
+}
+
+function updateStatistics() {
+  resMin.innerHTML = "" + (Math.min(...waitingTime) || '0');
+  resMed.innerHTML = "" + (Math.round(average(waitingTime)) || '0');
+  resMax.innerHTML = "" + (Math.max(...waitingTime) || '0');
+  resSd.innerHTML = "" +  (Math.round(standardDeviation(waitingTime)) || '0');
 }

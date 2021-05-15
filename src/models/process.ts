@@ -11,4 +11,5 @@ export interface Process {
   processName: string;
   state: ProcessState;
   timeElapsed: number;
+  timeStamp: number;
 }
