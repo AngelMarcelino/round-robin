@@ -13,3 +13,13 @@ export interface Process {
   timeElapsed: number;
   timeStamp: number;
 }
+
+export function getShortestRemainingWorkProcessOfTheProcessList (processList: Process[]): number {
+  let indexOfShortest = 0;
+  for (let i = 1; i < processList.length; i++) {
+    if (processList[i].remainingWork < processList[indexOfShortest].remainingWork) {
+      indexOfShortest = i;
+    }
+  }
+  return indexOfShortest;
+}

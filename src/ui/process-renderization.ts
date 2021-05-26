@@ -17,10 +17,17 @@ function innerContainerStyles(
   top: ${(totalWork - remainingWork) * 25}px;
   border: 1px solid #000;
   background-color: ${stateColor[state]};
-  transform: rotate(
-  180deg
-  );
   bottom: 0;
+  left: 0;
+  right: 0;
+  `;
+}
+
+function labelStyle(
+) {
+  return `
+  position: absolute;
+  top: -25px;
   left: 0;
   right: 0;
   `;
@@ -40,7 +47,10 @@ export function renderProcess(process: Process) {
   outterContainer.className = "process";
   let innerContainer = document.createElement("div");
   innerContainer.className = "inner-process";
+  let label = document.createElement("div");
+  label.innerText = process.processName;
   outterContainer.appendChild(innerContainer);
+  outterContainer.appendChild(label);
   updateProcess(process, outterContainer);
   return outterContainer;
 }
@@ -53,6 +63,8 @@ export function updateProcess(
     "style",
     outterContainerStyles(process.totalWork)
   );
+  let label = outterContainer.lastChild as HTMLDivElement;
+  label.setAttribute("style", labelStyle());
   let innerContainer = outterContainer.firstChild as HTMLDivElement;
   innerContainer.setAttribute(
     "style",

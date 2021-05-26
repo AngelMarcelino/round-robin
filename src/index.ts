@@ -1,9 +1,8 @@
-import { Process, ProcessState } from "./models/process";
+import { getShortestRemainingWorkProcessOfTheProcessList, Process, ProcessState } from "./models/process";
 import { renderProcess, updateProcess } from "./ui/process-renderization";
 import { average, standardDeviation } from "./utils/statistics";
 
 const startBtn = document.getElementById("startBtnId");
-const quantumTimeInput = document.getElementById("quantum-value");
 const processContainer = document.getElementById("process-container");
 
 let resMin = document.getElementById("res-min");
@@ -20,8 +19,7 @@ function updateHtmlStats(cpuIdle: number, cpuBusy: number) {
 }
 
 startBtn.addEventListener("click", () => {
-  let quantumTime: string = (<HTMLInputElement>quantumTimeInput).value;
-  start(+quantumTime);
+  start();
 });
 
 function createNewProcess(workAmount: number, name: string): Process {
@@ -49,6 +47,7 @@ let processList: ProcessQueueElement[] = [];
 let waitingTime: number[] = [];
 let intervalAddProcess: any;
 let intervalProcess: any;
+let processNumber = 0;
 const processLimit = 6;
 
 const minWorkAmount = 3;
@@ -66,16 +65,14 @@ function isFirstTimeSeen(process: Process) {
   return process.totalWork == process.remainingWork;
 }
 
-function start(quantumTime: number) {
+function start() {
   clear();
-  let quantumLimit = quantumTime;
-  let processCount = 0;
   intervalAddProcess = setInterval(() => {
     let process = createNewProcess(
       Math.floor(
         Math.random() * (maxWorkAmount - minWorkAmount + 1) + minWorkAmount
       ),
-      "proceso"
+      `P${processNumber++}`
     );
     let processDom = renderProcess(process);
     processList.push({
@@ -83,12 +80,13 @@ function start(quantumTime: number) {
       processDom: processDom,
     });
     processContainer.appendChild(processDom);
-    if (processList.length == processLimit) {
-      clearInterval(intervalAddProcess);
+    let indexOfMinProcess = getShortestRemainingWorkProcessOfTheProcessList(processList.map(e => e.process));
+    currentProcess = indexOfMinProcess;
+    if (processList.length == 20) {
+      clearInterval(intervalAddProcess)
     }
   }, 1000);
   let currentProcess = 0;
-  let currentDedicatingTime = 0;
 
   let cpuIdle = 0;
   let cpuBusy = 0;
@@ -99,7 +97,7 @@ function start(quantumTime: number) {
     if (current.process.state == ProcessState.COMPLETED) {
       cpuIdle++;
       updateHtmlStats(cpuIdle, cpuBusy);
-      currentProcess = calculateNextElement(currentProcess, processList.length);
+      currentProcess = getShortestRemainingWorkProcessOfTheProcessList(processList.map(e => e.process));
       return;
     } else {
       cpuBusy++;
@@ -110,23 +108,20 @@ function start(quantumTime: number) {
       waitingTime.push(new Date().getTime() - current.process.timeStamp);
     }
     current.process.remainingWork--;
-    currentDedicatingTime++;
     if (current.process.remainingWork <= 0) {
       current.process.state = ProcessState.COMPLETED;
-      currentProcess = calculateNextElement(currentProcess, processList.length);
-      currentDedicatingTime = 0;
-    } else if (currentDedicatingTime > quantumLimit) {
-      if (processList.length > 1) {
-        current.process.state = ProcessState.WAITING;
-      }
-      currentProcess = calculateNextElement(currentProcess, processList.length);
-      currentDedicatingTime = 0;
-    } else {
-      currentDedicatingTime++;
+      deleteProcess(processList, currentProcess);
+      currentProcess = getShortestRemainingWorkProcessOfTheProcessList(processList.map(e => e.process));
     }
     updateProcess(current.process, current.processDom);
     console.log([...processList]);
   }, 500);
+}
+
+function deleteProcess(processes: ProcessQueueElement[], index: number) {
+  const toDelete = processes[index];
+  toDelete.processDom.remove();
+  processList.splice(index, 1);
 }
 
 function updateStatistics() {
